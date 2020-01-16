@@ -44,12 +44,13 @@ def validate_case_matches_checkpoint(do_lower_case, init_checkpoint):
 
   lower_models = [
       "uncased_L-24_H-1024_A-16", "uncased_L-12_H-768_A-12",
-      "multilingual_L-12_H-768_A-12", "chinese_L-12_H-768_A-12"
+      "multilingual_L-12_H-768_A-12", "chinese_L-12_H-768_A-12",
+      "wwm_uncased_L-24_H-1024_A-16"
   ]
 
   cased_models = [
       "cased_L-12_H-768_A-12", "cased_L-24_H-1024_A-16",
-      "multi_cased_L-12_H-768_A-12"
+      "multi_cased_L-12_H-768_A-12", "wwm_cased_L-24_H-1024_A-16"
   ]
 
   is_bad_config = False
