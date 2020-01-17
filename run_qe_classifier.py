@@ -240,8 +240,8 @@ class RobustProcessor(DataProcessor):
         train_files = ["{}.trec.with_json".format(i) for i in self.train_folds]
         qrel_file = open(os.path.join(data_dir, "qrels"))
         qrels = self._read_qrel(qrel_file)
-        q_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(q_fields)))
+        query_fields = FLAGS.query_field.split(' ')
+        tf.logging.info("Using query fields {}".format(' '.join(query_fields)))
 
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
@@ -250,7 +250,7 @@ class RobustProcessor(DataProcessor):
                 trec_line = items[0]
                 json_dict = json.loads('#'.join(items[1:]))
                 q = json_dict["query"]
-                q_text_list = [tokenization.convert_to_unicode(q[field]) for field in q_fields]
+                q_text_list = [tokenization.convert_to_unicode(q[field]) for field in query_fields]
                 d = tokenization.convert_to_unicode(json_dict["doc"]["body"])
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -273,15 +273,15 @@ class RobustProcessor(DataProcessor):
         dev_file = open(os.path.join(data_dir, "{}.trec.with_json".format(self.test_folds)))
         qrel_file = open(os.path.join(data_dir, "qrels"))
         qrels = self._read_qrel(qrel_file)
-        q_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(q_fields)))
+        query_fields = FLAGS.query_field.split(' ')
+        tf.logging.info("Using query fields {}".format(' '.join(query_fields)))
 
         for i, line in enumerate(dev_file):
             items = line.strip().split('#')
             trec_line = items[0]
             json_dict = json.loads('#'.join(items[1:]))
             q = json_dict["query"]
-            q_text_list = [tokenization.convert_to_unicode(q[field]) for field in q_fields]
+            q_text_list = [tokenization.convert_to_unicode(q[field]) for field in query_fields]
 
             d = tokenization.convert_to_unicode(json_dict["doc"]["body"])
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -319,7 +319,7 @@ class ClueWebProcessor(DataProcessor):
         self.n_folds = 5
         self.fold = FLAGS.fold
         self.query_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(self.q_fields)))
+        tf.logging.info("Using query fields {}".format(' '.join(self.query_fields)))
 
         self.train_folds = [(self.fold + i) % self.n_folds + 1 for i in range(self.n_folds - 1)]
         self.test_folds = (self.fold + self.n_folds - 1) % self.n_folds + 1
@@ -347,7 +347,7 @@ class ClueWebProcessor(DataProcessor):
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
-                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
                 json_dict = json.loads('#'.join(items[1:]))
                 body_words = json_dict["doc"]["body"].split(' ')
@@ -388,7 +388,7 @@ class ClueWebProcessor(DataProcessor):
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
             assert qid in qid2queries, "QID {} not found".format(qid)
             q_json_dict = qid2queries[qid]
-            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
             json_dict = json.loads('#'.join(items[1:]))
             body_words = json_dict["doc"]["body"].split(' ')
@@ -437,7 +437,7 @@ class CastProcessor(DataProcessor):
         self.n_folds = 5
         self.fold = FLAGS.fold
         self.query_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(self.q_fields)))
+        tf.logging.info("Using query fields {}".format(' '.join(self.query_fields)))
 
         self.train_folds = [(self.fold + i) % self.n_folds + 1 for i in range(self.n_folds - 1)]
         self.test_folds = (self.fold + self.n_folds - 1) % self.n_folds + 1
@@ -465,7 +465,7 @@ class CastProcessor(DataProcessor):
                 qid, _, docid, rank, _, _ = trec_line.split(' ')
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
-                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
                 # TODO why join things again?
                 # json_dict = json.loads('#'.join(items[1:]))
@@ -512,7 +512,7 @@ class CastProcessor(DataProcessor):
             qid, _, docid, rank, _, _ = trec_line.split(' ')
             assert qid in qid2queries, "QID {} not found".format(qid)
             q_json_dict = qid2queries[qid]
-            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
             # TODO why join things again?
             # json_dict = json.loads('#'.join(items[1:]))
@@ -566,8 +566,8 @@ class RobustPassageProcessor(DataProcessor):
         self.max_train_depth = 1000  # for training, we use negative samples from the top 1000 documents
         self.n_folds = 5
         self.fold = FLAGS.fold
-        self.q_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(self.q_fields)))
+        self.query_fields = FLAGS.query_field.split(' ')
+        tf.logging.info("Using query fields {}".format(' '.join(self.query_fields)))
 
         self.train_folds = [(self.fold + i) % self.n_folds + 1 for i in range(self.n_folds - 1)]
         self.test_folds = (self.fold + self.n_folds - 1) % self.n_folds + 1
@@ -604,7 +604,7 @@ class RobustPassageProcessor(DataProcessor):
 
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
-                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
                 json_dict = json.loads('#'.join(items[1:]))
                 d = tokenization.convert_to_unicode(json_dict["doc"]["body"])
@@ -641,7 +641,7 @@ class RobustPassageProcessor(DataProcessor):
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
             assert qid in qid2queries, "QID {} not found".format(qid)
             q_json_dict = qid2queries[qid]
-            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
             json_dict = json.loads('#'.join(items[1:]))
             d = tokenization.convert_to_unicode(json_dict["doc"]["body"])
@@ -689,8 +689,8 @@ class ClueWebPassageProcessor(DataProcessor):
         self.max_train_depth = 100
         self.n_folds = 5
         self.fold = FLAGS.fold
-        self.q_fields = FLAGS.query_field.split(' ')
-        tf.logging.info("Using query fields {}".format(' '.join(self.q_fields)))
+        self.query_fields = FLAGS.query_field.split(' ')
+        tf.logging.info("Using query fields {}".format(' '.join(self.query_fields)))
 
         self.train_folds = [(self.fold + i) % self.n_folds + 1 for i in range(self.n_folds - 1)]
         self.test_folds = (self.fold + self.n_folds - 1) % self.n_folds + 1
@@ -728,7 +728,7 @@ class ClueWebPassageProcessor(DataProcessor):
 
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
-                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+                q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
                 json_dict = json.loads('#'.join(items[1:]))
                 body_words = json_dict["doc"]["body"].split(' ')
@@ -769,7 +769,7 @@ class ClueWebPassageProcessor(DataProcessor):
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
             assert qid in qid2queries, "QID {} not found".format(qid)
             q_json_dict = qid2queries[qid]
-            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
+            q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
             json_dict = json.loads('#'.join(items[1:]))
             body_words = json_dict["doc"]["body"].split(' ')
