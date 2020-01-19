@@ -247,7 +247,7 @@ class RobustProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split('#')
+                items = line.strip().split(' # ')
                 trec_line = items[0]
                 json_dict = json.loads('#'.join(items[1:]))
                 q = json_dict["query"]
@@ -278,7 +278,7 @@ class RobustProcessor(DataProcessor):
         tf.logging.info("Using query fields {}".format(' '.join(query_fields)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split('#')
+            items = line.strip().split(' # ')
             trec_line = items[0]
             json_dict = json.loads('#'.join(items[1:]))
             q = json_dict["query"]
@@ -342,7 +342,7 @@ class ClueWebProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split('#')
+                items = line.strip().split(' # ')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -383,7 +383,7 @@ class ClueWebProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries. Example: {}".format(len(qid2queries), list(qid2queries.values())[0]))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split('#')
+            items = line.strip().split(' # ')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -460,7 +460,7 @@ class CastProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split('#')
+                items = line.strip().split(' # ')
                 trec_line = items[0].strip()
 
                 qid, _, docid, rank, _, _ = trec_line.split(' ')
@@ -508,7 +508,7 @@ class CastProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries. Example: {}".format(len(qid2queries), list(qid2queries.values())[0]))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split('#')
+            items = line.strip().split(' # ')
             trec_line = items[0].strip()
 
             qid, _, docid, rank, _, _ = trec_line.split(' ')
@@ -592,7 +592,7 @@ class RobustPassageProcessor(DataProcessor):
             train_file = tf.gfile.Open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
 
-                items = line.strip().split('#')
+                items = line.strip().split(' # ')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -637,7 +637,7 @@ class RobustPassageProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries.".format(len(qid2queries)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split('#')
+            items = line.strip().split(' # ')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -714,7 +714,7 @@ class ClueWebPassageProcessor(DataProcessor):
         for file_name in train_files:
             train_file = tf.gfile.Open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split('#')
+                items = line.strip().split(' # ')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -765,7 +765,7 @@ class ClueWebPassageProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries.".format(len(qid2queries)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split('#')
+            items = line.strip().split(' # ')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
