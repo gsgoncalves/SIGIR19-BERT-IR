@@ -237,6 +237,7 @@ class RobustProcessor(DataProcessor):
 
     def get_train_examples(self, data_dir):
         examples = []
+        # TODO I was here. Check how do the filenames match
         train_files = ["{}.trec.with_json".format(i) for i in self.train_folds]
         qrel_file = open(os.path.join(data_dir, "qrels"))
         qrels = self._read_qrel(qrel_file)
@@ -433,7 +434,7 @@ class CastProcessor(DataProcessor):
 
     def __init__(self):
         self.max_test_depth = 100
-        self.max_train_depth = 100
+        self.max_train_depth = 1000
         self.n_folds = 5
         self.fold = FLAGS.fold
         self.query_fields = FLAGS.query_field.split(' ')
@@ -469,6 +470,7 @@ class CastProcessor(DataProcessor):
 
                 # TODO why join things again?
                 # json_dict = json.loads('#'.join(items[1:]))
+                print(items[1].strip())
                 json_dict = json.loads(items[1].strip())
                 body_words = json_dict["body"].split(' ')
                 truncated_body = ' '.join(body_words[0: min(200, len(body_words))])
