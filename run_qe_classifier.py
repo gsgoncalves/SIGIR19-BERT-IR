@@ -278,7 +278,7 @@ class RobustProcessor(DataProcessor):
         tf.logging.info("Using query fields {}".format(' '.join(query_fields)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split(' # ')
+            items = line.strip().split('#')
             trec_line = items[0]
             json_dict = json.loads('#'.join(items[1:]))
             q = json_dict["query"]
@@ -468,10 +468,7 @@ class CastProcessor(DataProcessor):
                 q_json_dict = qid2queries[qid]
                 q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
-                # TODO why join things again?
-                # json_dict = json.loads('#'.join(items[1:]))
-                print(items[1].strip())
-                json_dict = json.loads(items[1].strip())
+                json_dict = json.loads('#'.join(items[1:]))
                 body_words = json_dict["body"].split(' ')
                 truncated_body = ' '.join(body_words[0: min(200, len(body_words))])
 
@@ -591,7 +588,7 @@ class RobustPassageProcessor(DataProcessor):
             train_file = tf.gfile.Open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
 
-                items = line.strip().split(' # ')
+                items = line.strip().split('#')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -636,7 +633,7 @@ class RobustPassageProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries.".format(len(qid2queries)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split(' # ')
+            items = line.strip().split('#')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -713,7 +710,7 @@ class ClueWebPassageProcessor(DataProcessor):
         for file_name in train_files:
             train_file = tf.gfile.Open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split(' # ')
+                items = line.strip().split('#')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -764,7 +761,7 @@ class ClueWebPassageProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries.".format(len(qid2queries)))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split(' # ')
+            items = line.strip().split('#')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
