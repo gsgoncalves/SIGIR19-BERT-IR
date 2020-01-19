@@ -516,9 +516,8 @@ class CastProcessor(DataProcessor):
             q_json_dict = qid2queries[qid]
             q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
-            # TODO why join things again?
-            # json_dict = json.loads('#'.join(items[1:]))
-            json_dict = json.loads(items[1].strip())
+            # join things again because there might be documents with the dividing char.
+            json_dict = json.loads('#'.join(items[1:].strip()))
             body_words = json_dict["doc"]["body"].split(' ')
             truncated_body = ' '.join(body_words[0: min(200, len(body_words))])
 
