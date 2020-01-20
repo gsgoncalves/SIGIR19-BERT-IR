@@ -247,7 +247,7 @@ class RobustProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split(' # ')
+                items = line.strip().split('#')
                 trec_line = items[0]
                 json_dict = json.loads('#'.join(items[1:]))
                 q = json_dict["query"]
@@ -342,7 +342,7 @@ class ClueWebProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split(' # ')
+                items = line.strip().split('#')
                 trec_line = items[0]
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -383,7 +383,7 @@ class ClueWebProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries. Example: {}".format(len(qid2queries), list(qid2queries.values())[0]))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split(' # ')
+            items = line.strip().split('#')
             trec_line = items[0]
 
             qid, _, docid, r, _, _ = trec_line.strip().split(' ')
@@ -460,7 +460,7 @@ class CastProcessor(DataProcessor):
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
             for i, line in enumerate(train_file):
-                items = line.strip().split(' # ')
+                items = line.strip().split('#')
                 trec_line = items[0].strip()
 
                 qid, _, docid, rank, _, _ = trec_line.split(' ')
@@ -505,7 +505,7 @@ class CastProcessor(DataProcessor):
         tf.logging.info("Loaded {} queries. Example: {}".format(len(qid2queries), list(qid2queries.values())[0]))
 
         for i, line in enumerate(dev_file):
-            items = line.strip().split(' # ')
+            items = line.strip().split('#')
             trec_line = items[0].strip()
 
             qid, _, docid, rank, _, _ = trec_line.split(' ')
@@ -514,7 +514,7 @@ class CastProcessor(DataProcessor):
             q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
 
             # join things again because there might be documents with the dividing char.
-            json_dict = json.loads('#'.join(items[1:].strip()))
+            json_dict = json.loads('#'.join(items[1:]))
             body_words = json_dict["doc"]["body"].split(' ')
             truncated_body = ' '.join(body_words[0: min(200, len(body_words))])
 
