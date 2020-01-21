@@ -515,7 +515,7 @@ class CastProcessor(DataProcessor):
 
             # join things again because there might be documents with the dividing char.
             json_dict = json.loads('#'.join(items[1:]))
-            body_words = json_dict["doc"]["body"].split(' ')
+            body_words = json_dict["body"].split(' ')
             truncated_body = ' '.join(body_words[0: min(200, len(body_words))])
 
             # TODO adapt this to concatenate either entities or mentions.
