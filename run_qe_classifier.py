@@ -450,7 +450,7 @@ class CastProcessor(DataProcessor):
         train_files = ["{}.trec.with_json".format(i) for i in self.train_folds]
 
         qrel_file = open(os.path.join(data_dir, "qrels"))
-        qrels = self._read_qrel(qrel_file)
+        qrels = self._read_cast_qrel(qrel_file)
         tf.logging.info("Qrel size: {}".format(len(qrels)))
 
         query_file = open(os.path.join(data_dir, "queries.json"))
@@ -464,6 +464,11 @@ class CastProcessor(DataProcessor):
                 trec_line = items[0].strip()
 
                 qid, _, docid, rank, _, _ = trec_line.split(' ')
+
+                # TODO check if rank clause can be processed before the text processing to save resources
+                rank = int(rank)
+                if rank > self.max_train_depth:
+                    continue
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
                 q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.query_fields]
@@ -479,9 +484,9 @@ class CastProcessor(DataProcessor):
                 d = tokenization.convert_to_unicode(truncated_body)
 
                 # TODO check if rank clause can be processed before the text processing to save resources
-                rank = int(rank)
-                if rank > self.max_train_depth:
-                    continue
+                # rank = int(rank)
+                # if rank > self.max_train_depth:
+                #     continue
                 label = tokenization.convert_to_unicode("0")
                 if (qid, docid) in qrels: # or (qid, docid.split('_')[0]) in qrels:
                     label = tokenization.convert_to_unicode("1")
@@ -544,6 +549,22 @@ class CastProcessor(DataProcessor):
             rel = int(rel)
             if rel > 0:
                 qrels.add((qid, docid))
+        return qrels
+
+    def _read_cast_qrel(self, qrel_file):
+        qrels = set()
+        for line in qrel_file:
+            qid, _, docid, rel = line.strip().split(' ')
+            dialog_id = int(qid.split('_')[0])
+            rel = int(rel)
+            # Train qrels
+            if dialog_id < 31:
+                if rel > 0:
+                    qrels.add((qid, docid))
+            # Test qrels
+            else:
+                if rel > 2:
+                    qrels.add((qid, docid))
         return qrels
 
     def _read_queries(self, query_file):
